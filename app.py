@@ -83,6 +83,7 @@ def make_setting(config_path):
     for model_conf in models:
         model_name = model_conf["model_name"]
         model_path = model_conf["model_path"]
+        experiment_name = model_conf["experiment_name"]
         if not os.path.exists(model_path):
             logger.info(f"File {model_path} doesn't exist")
             continue
@@ -92,7 +93,7 @@ def make_setting(config_path):
         else:
             raise ValueError(f"Model {model_name} not supported.")
         # Save model
-        AVAILABLE_MODELS[model_name] = model
+        AVAILABLE_MODELS[experiment_name] = model
 
 CONFIG_PATH = os.path.join("config", "app_config.yaml")
 make_setting(CONFIG_PATH)

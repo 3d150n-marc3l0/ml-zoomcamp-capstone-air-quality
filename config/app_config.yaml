@@ -7,15 +7,15 @@ data_config:
 
 
 models:
-  - model_name : TCN
-    series_name: total
-    model_path : models/tcn/baseline_model_tcn.pt
-  - model_name : TCN
-    series_name: total
-    model_path : models/tcn/best_model_tcn.pt
-  - model_name : NBeats
-    series_name: total
-    model_path : models/nbeats/baseline_model_nbeats.pt
-  - model_name : NBeats
-    series_name: total
-    model_path : models/nbeats/best_model_nbeats.pt
+  - model_name: TCN  
+    model_path: models/tcn/baseline_model_tcn.pt
+    experiment_name: baseline_tcn
+  - model_name: TCN
+    model_path: models/tcn/best_model_tcn.pt
+    experiment_name: optimized_tcn
+  - model_name: NBeats
+    model_path: models/nbeats/baseline_model_nbeats.pt
+    experiment_name: baseline_nbeats
+  - model_name: NBeats
+    model_path: models/nbeats/best_model_nbeats.pt
+    experiment_name: optimized_nbeats
