@@ -180,3 +180,7 @@ data/raw/air-quality-madrid/*
 output/*
 # Darts
 darts_logs/*
+
+# Notebooks
+notebooks/*.html
+notebooks/*.zip
