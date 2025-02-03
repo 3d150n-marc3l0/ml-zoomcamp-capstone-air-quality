@@ -141,7 +141,7 @@ def predict():
             predictions[model_name] = forecast_json
         # Return the prediction as JSON
         return jsonify({
-            'predictions': forecast_json
+            'predictions': predictions
         })
 
     except ValueError:

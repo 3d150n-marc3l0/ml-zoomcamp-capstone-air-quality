@@ -6,50 +6,40 @@ data_config:
 
 
 models:
-  -   baseline: 
-        model_name: baseline_model_tcn
-        train_caller: train_tcn
+  - model_name: TCN
+    baseline: 
+        experiment_name: baseline_model_tcn
         default_params_path: models/tcn/baseline_model_tcn_default_params.json
         output_dir: models/tcn
-
-      hpo:
-        model_name: hpo_model_tcn
-        hpo_caller: optimize_tcn_with_optuna
+    hpo:
+        experiment_name: hpo_model_tcn
         n_trials: 2
-        random_seed: 42
         default_params_path : models/tcn/hpo_model_tcn_default_params.json
         output_dir: models/tcn
-
-      best_model:
-        model_name: best_model_tcn
-        train_caller: train_tcn
+    best_model:
+        experiment_name: best_model_tcn
         default_params_path : models/tcn/hpo_model_tcn_default_params.json
         optimized_params_path: models/tcn/hpo_model_tcn_optimized_params.json
         output_dir: models/tcn
 
-  -   baseline: 
-        model_name: baseline_model_nbeats
-        train_caller: train_nbeats
+  - model_name: NBeats
+    baseline: 
+        experiment_name: baseline_model_nbeats
         default_params_path: models/nbeats/baseline_model_nbeats_default_params.json
         output_dir: models/nbeats
-
-      hpo:
-        model_name: hpo_model_nbeats
-        hpo_caller: optimize_nbeats_with_optuna
+    hpo:
+        experiment_name: hpo_model_nbeats
         n_trials: 2
-        random_seed: 42
         default_params_path : models/nbeats/hpo_model_nbeats_default_params.json
         output_dir: models/nbeats
-
-      best_model:
-        model_name: best_model_nbeats
-        train_caller: train_nbeats
+    best_model:
+        experiment_name: best_model_nbeats
         default_params_path : models/nbeats/hpo_model_nbeats_default_params.json
         optimized_params_path: models/nbeats/hpo_model_nbeats_optimized_params.json
         output_dir: models/nbeats
 
-results:
+outputs:
   raw_dir: "data/raw"
   prepro_dir: "data/prepro"
-  models_dir: "models"
+  #models_dir: "models"
 

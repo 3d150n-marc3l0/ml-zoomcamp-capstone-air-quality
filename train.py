@@ -977,15 +977,15 @@ def main():
 
     # Setting
     RAW_DATASET_DIR = training_config["data_config"]["train_data"]["dir"]
-    RAW_DIR    = training_config["results"]["raw_dir"]
-    PREPRO_DIR = training_config["results"]["prepro_dir"]
-    MODELS_DIR = training_config["results"]["models_dir"]
+    RAW_DIR    = training_config["outputs"]["raw_dir"]
+    PREPRO_DIR = training_config["outputs"]["prepro_dir"]
+    #MODELS_DIR = training_config["results"]["models_dir"]
 
     # Training
     TRAINING_MODELS_CONFIG = training_config["models"]
 
     # Create directories
-    os.makedirs(MODELS_DIR, exist_ok=True)
+    #os.makedirs(MODELS_DIR, exist_ok=True)
     os.makedirs(RAW_DIR, exist_ok=True)
     os.makedirs(PREPRO_DIR, exist_ok=True)
 
@@ -1042,19 +1042,44 @@ def main():
             pickle.dump(transform, f)
     
     
+    # Create models dict
+    AVAILABLE_TRAINER_FUNCTIONS = {
+        "NBeats": train_nbeats,
+        "TCN": train_tcn
+    }
+    AVAILABLE_OPTIMIZER_FUNCTIONS = {
+        "NBeats": optimize_nbeats_with_optuna,
+        "TCN": optimize_tcn_with_optuna
+    }
     for model_config in TRAINING_MODELS_CONFIG:
         # Get data
         ts_name = 'total'
         transform, train_ts_scaled, valid_ts_scaled, test_ts_scaled = partition_ts_scaled_dict['total']
 
+        # Read Setting
+        logger.info(f"[TRAINING] Config: {model_config}")
+        
+        # Get Model Name
+        model_name = model_config['model_name']
+        logger.info(f"[TRAINING] Model Name: {model_name}")
+        # Trainer
+        if model_name in AVAILABLE_TRAINER_FUNCTIONS:
+            train_caller = AVAILABLE_TRAINER_FUNCTIONS[model_name]
+        else:
+            raise ValueError(f"Model {model_name} not supported.")
+        # Optimizer
+        if model_name in AVAILABLE_OPTIMIZER_FUNCTIONS:
+            hpo_caller = AVAILABLE_OPTIMIZER_FUNCTIONS[model_name]
+        else:
+            raise ValueError(f"Model {model_name} not supported.")
+        hpo_n_trials = model_config['hpo']['n_trials']
+
         # ================================
         # Train Base Model
         # ================================
 
-        # Read Setting
-        logger.info(f"[TRAINING] Config: {model_config}")
-        base_model_name = model_config['baseline']['model_name']
-        train_caller = get_caller(model_config['baseline']['train_caller'])
+        # Base lineTraining Setting
+        base_exp_name = model_config['baseline']['experiment_name']
         default_params = read_model_parms(model_config['baseline']['default_params_path'])
         base_model_results_dir = model_config['baseline']['output_dir']
 
@@ -1065,7 +1090,7 @@ def main():
             test_ts_scaled,
             trainer=train_caller,
             model_params=default_params,
-            model_name=base_model_name,
+            model_name=base_exp_name,
             models_dir=base_model_results_dir,
             transform=transform
         )
@@ -1074,11 +1099,8 @@ def main():
         # HPO Model
         # ================================
         
-        # Read Setting
-        hpo_model_name = model_config['hpo']['model_name']
-        hpo_caller = get_caller(model_config['hpo']['hpo_caller'])
-        hpo_n_trials = model_config['hpo']['n_trials']
-        #hpo_random_seed = model_config['hpo']['random_seed']
+        # HPO Setting
+        hpo_exp_name = model_config['hpo']['experiment_name']
         hpo_default_params = read_model_parms(model_config['hpo']['default_params_path'])
         hpo_model_results_dir = model_config['hpo']['output_dir']
 
@@ -1088,7 +1110,7 @@ def main():
             valid_ts_scaled,
             optimizer=hpo_caller,
             default_params=hpo_default_params,
-            model_name=hpo_model_name,
+            model_name=hpo_exp_name,
             models_dir=hpo_model_results_dir,
             transform=transform,
             n_trials=hpo_n_trials
@@ -1098,9 +1120,8 @@ def main():
         # Train Best Model
         # ================================
 
-        # Read Best Parameters
-        best_model_name = model_config['best_model']['model_name']
-        train_caller = get_caller(model_config['baseline']['train_caller'])
+        # Optimized Training Setting
+        best_exp_name = model_config['best_model']['experiment_name']
         best_params = build_model_params(
             model_config['best_model']['optimized_params_path'], 
             read_model_parms(model_config['best_model']['default_params_path'])
@@ -1114,7 +1135,7 @@ def main():
             test_ts_scaled,
             trainer=train_caller,
             model_params=best_params,
-            model_name=best_model_name,
+            model_name=best_exp_name,
             models_dir=best_model_results_dir,
             transform=transform
         )
