@@ -1,0 +1,21 @@
+data_config:
+  - series_name: total
+    transform_path : data/prepro/air-quality-madrid_total_transform.pkl
+    train_path: data/prepro/air-quality-madrid_total_train.csv
+    valid_path: data/prepro/air-quality-madrid_total_valid.csv
+    test_path : data/prepro/air-quality-madrid_total_test.csv
+
+
+models:
+  - model_name : TCN
+    series_name: total
+    model_path : models/tcn/baseline_model_tcn.pt
+  - model_name : TCN
+    series_name: total
+    model_path : models/tcn/best_model_tcn.pt
+  - model_name : NBeats
+    series_name: total
+    model_path : models/nbeats/baseline_model_nbeats.pt
+  - model_name : NBeats
+    series_name: total
+    model_path : models/nbeats/best_model_nbeats.pt

@@ -1,0 +1,12 @@
+data_config:
+  - series_name: total
+    transform_path : data/prepro/air-quality-madrid_total_transform.pkl
+    train_path: data/prepro/air-quality-madrid_total_train.csv
+    valid_path: data/prepro/air-quality-madrid_total_valid.csv
+    test_path : data/prepro/air-quality-madrid_total_test.csv
+
+endpoints:
+  predict: "http://127.0.0.1:5000/predict"
+
+outputs:
+  path: output/test_app

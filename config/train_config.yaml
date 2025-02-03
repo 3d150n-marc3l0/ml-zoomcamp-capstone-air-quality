@@ -1,0 +1,55 @@
+data_config:
+  train_data:
+      # Directory dataset
+      dataset_name: air-quality-madrid
+      dir: data/raw/air-quality-madrid/csvs_per_year/csvs_per_year
+
+
+models:
+  -   baseline: 
+        model_name: baseline_model_tcn
+        train_caller: train_tcn
+        default_params_path: models/tcn/baseline_model_tcn_default_params.json
+        output_dir: models/tcn
+
+      hpo:
+        model_name: hpo_model_tcn
+        hpo_caller: optimize_tcn_with_optuna
+        n_trials: 2
+        random_seed: 42
+        default_params_path : models/tcn/hpo_model_tcn_default_params.json
+        output_dir: models/tcn
+
+      best_model:
+        model_name: best_model_tcn
+        train_caller: train_tcn
+        default_params_path : models/tcn/hpo_model_tcn_default_params.json
+        optimized_params_path: models/tcn/hpo_model_tcn_optimized_params.json
+        output_dir: models/tcn
+
+  -   baseline: 
+        model_name: baseline_model_nbeats
+        train_caller: train_nbeats
+        default_params_path: models/nbeats/baseline_model_nbeats_default_params.json
+        output_dir: models/nbeats
+
+      hpo:
+        model_name: hpo_model_nbeats
+        hpo_caller: optimize_nbeats_with_optuna
+        n_trials: 2
+        random_seed: 42
+        default_params_path : models/nbeats/hpo_model_nbeats_default_params.json
+        output_dir: models/nbeats
+
+      best_model:
+        model_name: best_model_nbeats
+        train_caller: train_nbeats
+        default_params_path : models/nbeats/hpo_model_nbeats_default_params.json
+        optimized_params_path: models/nbeats/hpo_model_nbeats_optimized_params.json
+        output_dir: models/nbeats
+
+results:
+  raw_dir: "data/raw"
+  prepro_dir: "data/prepro"
+  models_dir: "models"
+

@@ -554,20 +554,24 @@ def run_evaluate_model(
     )
     forecast = concatenate(forecast)
 
-    # Transform
-    if transform:
-      logger.info('transform forecast')
-      forecast = transform.inverse_transform(forecast)
-      test_ts = transform.inverse_transform(test_ts)
-
     # Metrics
     val_mae = mae(test_ts, forecast)
     val_rmse = rmse(test_ts, forecast)
     val_mape = mape(test_ts, forecast)
     #val_r2_score = r2_score(test_ts.univariate_component(0), forecast)
 
+    # Transform
+    forecast_back = None
+    if transform:
+        logger.info('transform forecast')
+        forecast_back = transform.inverse_transform(forecast)
+        #forecast = transform.inverse_transform(forecast)
+        #test_ts = transform.inverse_transform(test_ts)
+
+    # Return    
     return {
         'forecast': forecast,
+        'forecast_back': forecast_back,
         'metrics': {
           'mae': val_mae,
           'rmse': val_rmse,
@@ -612,6 +616,9 @@ def run_traininig(
     forecast = trained_result['forecast']
     forecast_path = os.path.join(models_dir, f'{model_name}_forecast_valid.csv')
     forecast.pd_dataframe().to_csv(forecast_path)
+    forecast_back = trained_result['forecast_back']
+    forecast_back_path = os.path.join(models_dir, f'{model_name}_forecast_valid_back.csv')
+    forecast_back.pd_dataframe().to_csv(forecast_back_path)
 
     # Evaluation Base Random Forest
     eval_results = run_evaluate_model(
@@ -632,6 +639,9 @@ def run_traininig(
     forecast_eval = eval_results['forecast']
     forecast_eval_path = os.path.join(models_dir, f'{model_name}_forecast_test.csv')
     forecast_eval.pd_dataframe().to_csv(forecast_eval_path)
+    forecast_eval_back = eval_results['forecast_back']
+    forecast_eval_back_path = os.path.join(models_dir, f'{model_name}_forecast_test_back.csv')
+    forecast_eval_back.pd_dataframe().to_csv(forecast_eval_back_path)
 
 
 def run_optimization(
@@ -745,14 +755,9 @@ def train_tcn(
         stride=7,
         transform=transform
     )
-    forecast = eval_valid['forecast']
-    metrics  = eval_valid['metrics']
-
-    return {
-        'model': model,
-        'forecast': forecast,
-        'metrics': metrics
-    }
+    
+    train_result = {'model': model}
+    return {**train_result, **eval_valid}
 
 
 # Optimization with Optuna
@@ -883,14 +888,9 @@ def train_nbeats(
         stride=7,
         transform=transform
     )
-    forecast = eval_valid['forecast']
-    metrics  = eval_valid['metrics']
 
-    return {
-        'model': model,
-        'forecast': forecast,
-        'metrics': metrics
-    }
+    train_result = {'model': model}
+    return {**train_result, **eval_valid}
 
 
 # Optimization with Optuna
@@ -1038,6 +1038,8 @@ def main():
         train_ts.to_csv(os.path.join(PREPRO_DIR, f'{dataset_name}_{ts_name}_train.csv'))
         valid_ts.to_csv(os.path.join(PREPRO_DIR, f'{dataset_name}_{ts_name}_valid.csv'))
         test_ts.to_csv(os.path.join(PREPRO_DIR, f'{dataset_name}_{ts_name}_test.csv'))
+        with open(os.path.join(PREPRO_DIR, f'{dataset_name}_{ts_name}_transform.pkl'), "wb") as f:
+            pickle.dump(transform, f)
     
     
     for model_config in TRAINING_MODELS_CONFIG:
