@@ -4,7 +4,6 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-jupyter = "*"
 scikit-learn = "==1.5.2"
 xlrd = "==2.0.1"
 darts = "==0.32.0"
@@ -16,10 +15,11 @@ numpy = "==1.26.4"
 flask = "==3.0.3"
 optuna = "==4.2.0"
 torch = "==2.5.1"
-tensorflow = "==2.18.0"
-tensorboard = "==2.18.0"
 
 [dev-packages]
+jupyter = "*"
+tensorflow = "==2.18.0"
+tensorboard = "==2.18.0"
 
 [requires]
 python_version = "3.12"
