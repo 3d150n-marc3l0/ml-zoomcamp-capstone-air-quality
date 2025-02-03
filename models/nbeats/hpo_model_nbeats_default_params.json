@@ -1,0 +1,6 @@
+{
+    "n_epochs": 5,
+    "random_state": 42,
+    "force_reset": true,
+    "save_checkpoints": true
+}

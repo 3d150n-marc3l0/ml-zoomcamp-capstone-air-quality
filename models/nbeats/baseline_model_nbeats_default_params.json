@@ -1,0 +1,8 @@
+{
+    "input_chunk_length": 24,
+    "output_chunk_length": 12,
+    "n_epochs": 10,
+    "random_state": 42,
+    "force_reset": true,
+    "save_checkpoints": true
+}

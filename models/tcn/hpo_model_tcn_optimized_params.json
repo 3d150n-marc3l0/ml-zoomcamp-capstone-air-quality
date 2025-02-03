@@ -1,0 +1,1 @@
+{"n_epochs": 10, "random_state": 42, "force_reset": true, "save_checkpoints": true, "input_chunk_length": 43, "output_chunk_length": 15, "num_filters": 73, "kernel_size": 6, "dropout": 0.03052046313238249, "batch_size": 20, "learning_rate": 7.05950138818228e-05}
