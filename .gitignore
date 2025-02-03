@@ -172,4 +172,11 @@ cython_debug/
 
 
 
-*.zip
+# Logs
+logs/*
+# Datasets
+data/raw/air-quality-madrid/*
+# Output
+output/*
+# Darts
+darts_logs/*
