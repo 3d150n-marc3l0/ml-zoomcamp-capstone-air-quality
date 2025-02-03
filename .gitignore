@@ -184,3 +184,8 @@ darts_logs/*
 # Notebooks
 notebooks/*.html
 notebooks/*.zip
+notebooks/darts_logs/*
+
+# Models
+models/notebook_nbeats/*
+models/notebook_tcn/*
