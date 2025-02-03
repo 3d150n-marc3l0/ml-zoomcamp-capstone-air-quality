@@ -1,7 +1,7 @@
 # Project: Air Quality Madrid
 
 <p align="center">
-  <img src="images/banner.jpg">
+  <img src="images/banner.png">
 </p>
 
 
