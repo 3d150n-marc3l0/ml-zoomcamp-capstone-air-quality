@@ -104,7 +104,7 @@ def main():
         prediction_config = yaml.safe_load(f)
 
     # Results dir
-    ouput_dir = prediction_config["results"]["prediction_dir"]
+    ouput_dir = prediction_config["outputs"]["prediction_dir"]
     os.makedirs(ouput_dir, exist_ok=True)
 
     # Datasets

@@ -16,5 +16,5 @@ models:
   - model_name: NBeats
     model_path: models/nbeats/best_model_nbeats.pt
     
-results:
+outputs:
   prediction_dir: "output/predict"
