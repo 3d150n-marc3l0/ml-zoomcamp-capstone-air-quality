@@ -1,5 +1,6 @@
 # Usar una imagen base de Python
-FROM python:3.10.12-slim
+#FROM python:3.10.12-slim
+FROM python:3.12-slim
 
 # Establecer el directorio de trabajo
 WORKDIR /app
@@ -22,8 +23,10 @@ RUN pipenv install --deploy --ignore-pipfile
 #COPY app.py .
 # Copia el código de la aplicación
 COPY app.py .
+COPY train.py .
 COPY config/ config/
 COPY models/ models/
+COPY data/prepro/ data/prepro/
 #RUN ls -lh && pwd
 
 # Exponer el puerto en el que se ejecutará la aplicación
